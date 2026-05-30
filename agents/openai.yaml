@@ -1,0 +1,4 @@
+interface:
+  display_name: "GeoGebra Create"
+  short_description: "Create GeoGebra constructions and exports."
+  default_prompt: "Use $geogebra-create to create a GeoGebra construction from this task."
