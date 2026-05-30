@@ -27,9 +27,27 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 
 ## 注意事項
 
+- 每次啟動本 skill 處理 GeoGebra 製圖任務時，必須先讀取 `references/learned-techniques.md`。不得只讀本 `SKILL.md` 就開始產生 `.ggb`。
+- 讀取 `references/learned-techniques.md` 後，必須先判斷任務是否適用其中的既有技巧，尤其是 Custom Tools、point list 參數、`IterationList`、`Zip`、`NextGen`、`NestedSpiral`。
+- 如果任務包含重複圖形、遞迴或迭代圖形、nested spiral、string art、大量線段、多邊形序列、點列轉換，或任何可能讓代數區物件暴增／物件定義過長的構圖，必須優先採用 Custom Tools 與 point list 參數的模組化做法。
+- 若 `lessons/CustomTools.ggb` 已提供可重用工具（例如 `NextGen`、`NestedSpiral`），應優先複用或移植該工具，而不是重新手寫冗長的 `Sequence`、`Flatten`、`Join` 展開式。
+- 如果適用上述技巧但最後沒有使用，必須在製圖報告中明確說明原因。
 - 製作 `.ggb` 檔時，可優先啟動 [GeoGebra 經典線上版](https://www.geogebra.org/classic) app 開始建立物件。若無法連上，可啟動本機版的 app。
 - 如果你了解 `.ggb` 的檔案結構，也可以在不啟動 app 的情況下，直接產生可解決交付任務的 `.ggb` 檔，這也是可以接受的選項。
 - 若製作失敗，必須宣告製作失敗，並報告失敗原因。
+
+## 製圖前檢查
+
+開始產生或修改 `.ggb` 前，必須完成以下檢查：
+
+- 已讀取 `references/learned-techniques.md`。
+- 已檢查是否適用 Custom Tools。
+- 已檢查是否可用 point list 作為工具或指令參數。
+- 已檢查是否適用 `IterationList` / `Iteration` / `Zip`。
+- 已檢查是否已有可重用工具，例如 `NextGen`、`NestedSpiral`。
+- 已選擇能讓代數區簡潔、物件定義可讀、且可在 GeoGebra 中正常開啟的做法。
+
+若上述任一項適用，製圖時應優先使用；若不使用，必須記錄理由。
 
 ## 學習迴路
 
