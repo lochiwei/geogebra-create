@@ -30,7 +30,10 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 - 每次啟動本 skill 處理 GeoGebra 製圖任務時，必須先讀取 `references/learned-techniques.md`。不得只讀本 `SKILL.md` 就開始產生 `.ggb`。
 - 讀取 `references/learned-techniques.md` 後，必須先判斷任務是否適用其中的既有技巧，尤其是 Custom Tools、point list 參數、`IterationList`、`Zip`、`NextGen`、`NestedSpiral`。
 - 如果任務包含重複圖形、遞迴或迭代圖形、nested spiral、string art、大量線段、多邊形序列、點列轉換，或任何可能讓代數區物件暴增／物件定義過長的構圖，必須優先採用 Custom Tools 與 point list 參數的模組化做法。
+- 正式作圖之前，必須先分析整個圖形的複雜度，事先評估是否需要啟用 `ggb-create-macro` skill 來建立自製工具，並利用這些自製工具來簡化作圖流程、縮短物件定義長度、減少建立物件的總數量，避免產生過多不必要出現的中間產物。
+- 如果建立物件時需要套疊三層以上的 GeoGebra 指令，必須優先建立一個自製工具 (Custom Tool) 來代替這種複雜指令；除非 Custom Tool 無法支援該構圖，否則不要直接輸入過長的巢狀指令。
 - 若 `lessons/CustomTools.ggb` 已提供可重用工具（例如 `NextGen`、`NestedSpiral`），應優先複用或移植該工具，而不是重新手寫冗長的 `Sequence`、`Flatten`、`Join` 展開式。
+- 建立極座標時，不要用 `(r cos(θ), r sin(θ))` 這樣的方式寫，直接寫成 `(r; θ)` 即可。
 - 如果適用上述技巧但最後沒有使用，必須在製圖報告中明確說明原因。
 - 製作 `.ggb` 檔時，可優先啟動 [GeoGebra 經典線上版](https://www.geogebra.org/classic) app 開始建立物件。若無法連上，可啟動本機版的 app。
 - 如果你了解 `.ggb` 的檔案結構，也可以在不啟動 app 的情況下，直接產生可解決交付任務的 `.ggb` 檔，這也是可以接受的選項。
@@ -41,7 +44,10 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 開始產生或修改 `.ggb` 前，必須完成以下檢查：
 
 - 已讀取 `references/learned-techniques.md`。
+- 已分析整個圖形的複雜度。
 - 已檢查是否適用 Custom Tools。
+- 已評估是否存在三層以上的 GeoGebra 指令套疊；若存在，已優先規劃以 Custom Tool 取代。
+- 已評估是否需要啟用 `ggb-create-macro` skill 來建立自製工具。
 - 已檢查是否可用 point list 作為工具或指令參數。
 - 已檢查是否適用 `IterationList` / `Iteration` / `Zip`。
 - 已檢查是否已有可重用工具，例如 `NextGen`、`NestedSpiral`。
@@ -52,6 +58,14 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 ## 學習迴路
 
 當使用者在任務過程中教你更好的 GeoGebra 技巧時，請先將它視為一個「候選學習技巧」。任務結束時，整理並摘要這個技巧，說明它適用的情境，並在寫入 `references/learned-techniques.md` 之前先詢問使用者。
+
+## 物件標籤規則
+
+建立任何 GeoGebra 物件時，必須為該物件設定清楚、詳細的「標籤文字」(label)，並在標籤文字中說明此物件的功能、用途、幾何意義或在構圖中的角色，讓使用者可以直接理解每個物件是做什麼的，不需要只從「物件名稱」猜測。
+
+不論物件是否顯示於繪圖區，都不得將物件的「顯示標籤」屬性設定為「標籤文字」或「標籤文字與數值」。也就是說，仍必須設定清楚的標籤文字作為物件說明，但顯示標籤模式不得直接顯示該標籤文字，避免繪圖區或隱藏物件因描述性長標籤而造成干擾。
+
+若產出流程使用 `.ggb` 內部 XML、GGBScript、JavaScript 或 GeoGebra JavaScript API 建立物件，也必須同步設定 label/caption 類欄位或等效的顯示文字，確保最終檔案中的物件標籤可讀且具說明性。
 
 ## 物件命名規則
 
