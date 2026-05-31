@@ -33,7 +33,8 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 - 正式作圖之前，必須先分析整個圖形的複雜度，事先評估是否需要啟用 `ggb-create-macro` skill 來建立自製工具，並利用這些自製工具來簡化作圖流程、縮短物件定義長度、減少建立物件的總數量，避免產生過多不必要出現的中間產物。
 - 如果建立物件時需要套疊三層以上的 GeoGebra 指令，必須優先建立一個自製工具 (Custom Tool) 來代替這種複雜指令；除非 Custom Tool 無法支援該構圖，否則不要直接輸入過長的巢狀指令。
 - 若 `lessons/CustomTools.ggb` 已提供可重用工具（例如 `NextGen`、`NestedSpiral`），應優先複用或移植該工具，而不是重新手寫冗長的 `Sequence`、`Flatten`、`Join` 展開式。
-- 建立極座標時，不要用 `(r cos(θ), r sin(θ))` 這樣的方式寫，直接寫成 `(r; θ)` 即可。
+- 建立 2D 極座標點或向量時，不要用 `(r cos(θ), r sin(θ))` 這樣的方式寫，直接寫成 `(r; θ)` 即可。
+- 建立 3D 球座標點時，不要自製 `GeoPoint` 之類的轉換工具，也不要手動展開成直角座標；GeoGebra 內建支援分號表示法，直接寫成 `(r; θ; φ)`，例如 `P = (5; 30°; 20°)`。其中 `θ` 是 `xOy` 平面內從正 x 軸往正 y 軸量的水平角，`φ` 是相對 `xOy` 平面的仰角。若題目採用常見微積分/物理慣例，第三角 `α` 是從正 z 軸往下量的極角，輸入 GeoGebra 時應轉成 `P = (r; θ; 90° - α)`。
 - 如果適用上述技巧但最後沒有使用，必須在製圖報告中明確說明原因。
 - 製作 `.ggb` 檔時，可優先啟動 [GeoGebra 經典線上版](https://www.geogebra.org/classic) app 開始建立物件。若無法連上，可啟動本機版的 app。
 - 如果你了解 `.ggb` 的檔案結構，也可以在不啟動 app 的情況下，直接產生可解決交付任務的 `.ggb` 檔，這也是可以接受的選項。
