@@ -29,10 +29,11 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 
 - 每次啟動本 skill 處理 GeoGebra 製圖任務時，必須先讀取 `references/learned-techniques.md`。不得只讀本 `SKILL.md` 就開始產生 `.ggb`。
 - 讀取 `references/learned-techniques.md` 後，必須先判斷任務是否適用其中的既有技巧，尤其是 Custom Tools、point list 參數、`IterationList`、`Zip`、`NextGen`、`NestedSpiral`。
+- 建立物件時，如果沒有已知指令可以直接套用，必須先到 `custom_tools/` 資料夾與 `custom_tools/CustomTools.md` 中搜尋有沒有適用的工具；如果有就直接使用；如果沒有，再考慮製作新的自製指令，或用 GGBScript 直接寫。
 - 如果任務包含重複圖形、遞迴或迭代圖形、nested spiral、string art、大量線段、多邊形序列、點列轉換，或任何可能讓代數區物件暴增／物件定義過長的構圖，必須優先採用 Custom Tools 與 point list 參數的模組化做法。
 - 正式作圖之前，必須先分析整個圖形的複雜度，事先評估是否需要啟用 `ggb-create-macro` skill 來建立自製工具，並利用這些自製工具來簡化作圖流程、縮短物件定義長度、減少建立物件的總數量，避免產生過多不必要出現的中間產物。
 - 如果建立物件時需要套疊三層以上的 GeoGebra 指令，必須優先建立一個自製工具 (Custom Tool) 來代替這種複雜指令；除非 Custom Tool 無法支援該構圖，否則不要直接輸入過長的巢狀指令。
-- 若 `lessons/CustomTools.ggb` 已提供可重用工具（例如 `NextGen`、`NestedSpiral`），應優先複用或移植該工具，而不是重新手寫冗長的 `Sequence`、`Flatten`、`Join` 展開式。
+- 若 `custom_tools/CustomTools.md` 或 `lessons/CustomTools.ggb` 已提供可重用工具（例如 `MidpointOnSphere`、`ArcOnSphere`、`NextGen`、`NestedSpiral`），應優先複用或移植該工具，而不是重新手寫冗長的 `Sequence`、`Flatten`、`Join` 展開式。
 - 建立 2D 極座標點或向量時，不要用 `(r cos(θ), r sin(θ))` 這樣的方式寫，直接寫成 `(r; θ)` 即可。
 - 建立 3D 球座標點時，不要自製 `GeoPoint` 之類的轉換工具，也不要手動展開成直角座標；GeoGebra 內建支援分號表示法，直接寫成 `(r; θ; φ)`，例如 `P = (5; 30°; 20°)`。其中 `θ` 是 `xOy` 平面內從正 x 軸往正 y 軸量的水平角，`φ` 是相對 `xOy` 平面的仰角。若題目採用常見微積分/物理慣例，第三角 `α` 是從正 z 軸往下量的極角，輸入 GeoGebra 時應轉成 `P = (r; θ; 90° - α)`。
 - 如果適用上述技巧但最後沒有使用，必須在製圖報告中明確說明原因。
@@ -46,12 +47,12 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 
 - 已讀取 `references/learned-techniques.md`。
 - 已分析整個圖形的複雜度。
-- 已檢查是否適用 Custom Tools。
+- 已檢查是否適用 Custom Tools，並已搜尋 `custom_tools/` 與 `custom_tools/CustomTools.md` 是否有可直接使用的既有工具。
 - 已評估是否存在三層以上的 GeoGebra 指令套疊；若存在，已優先規劃以 Custom Tool 取代。
 - 已評估是否需要啟用 `ggb-create-macro` skill 來建立自製工具。
 - 已檢查是否可用 point list 作為工具或指令參數。
 - 已檢查是否適用 `IterationList` / `Iteration` / `Zip`。
-- 已檢查是否已有可重用工具，例如 `NextGen`、`NestedSpiral`。
+- 已檢查是否已有可重用工具，例如 `MidpointOnSphere`、`ArcOnSphere`、`NextGen`、`NestedSpiral`。
 - 已選擇能讓代數區簡潔、物件定義可讀、且可在 GeoGebra 中正常開啟的做法。
 
 若上述任一項適用，製圖時應優先使用；若不使用，必須記錄理由。

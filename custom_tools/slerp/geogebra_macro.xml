@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<geogebra format="5.0" version="5.4.925.3" app="classic" platform="d" xsi:noNamespaceSchemaLocation="https://www.geogebra.org/apps/xsd/ggt.xsd" xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<macro cmdName="MidpointOnSphere" toolName="MidpointOnSphere" toolHelp="MidpointOnSphere(&lt;point&gt;, &lt;point&gt;)：前提是球心為 (0,0,0)" iconFile="" showInToolBar="true" copyCaptions="true">
+	<macroInput a0="A" a1="B"/>
+	<macroOutput a0="M"/>
+<construction title="" author="" date="">
+<element type="point3d" label="A">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="77" g="77" b="255" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="0.1" type="1" playing="false"/>
+	<pointSize val="5"/>
+	<coords x="-0.7147961921704749" y="0.7284987232906972" z="0.004544421613845717" w="1"/>
+</element>
+<element type="point3d" label="B">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="77" g="77" b="255" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="0.1" type="1" playing="false"/>
+	<pointSize val="5"/>
+	<coords x="0.9806935994791903" y="-0.23393126245031848" z="0" w="1"/>
+</element>
+<command name="Angle">
+	<input a0="A" a1="(0, 0, 0)" a2="B"/>
+	<output a0="θ"/>
+</command>
+<element type="angle3d" label="θ">
+	<angleStyle val="1"/>
+	<emphasizeRightAngle val="false"/>
+	<value val="2.580845837204415"/>
+	<lineStyle thickness="5" type="0" typeHidden="2" opacity="178"/>
+	<arcSize val="30"/>
+	<show object="true" label="false" ev="11"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+</element>
+<expression label="M" exp="(A + B) / ((2 * cos(θ / 2)))" type="point"/>
+<element type="point3d" label="M">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="110" g="109" b="115" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<pointSize val="4"/>
+	<coords x="0.4804544247954693" y="0.8936421280886684" z="0.008211390605901467" w="1"/>
+</element>
+</construction>
+</macro>
+<macro cmdName="ArcOnSphere" toolName="ArcOnSphere" toolHelp="ArcOnSphere(&lt;point&gt;, &lt;point&gt;)：修正 CircumcircularArc/CircularArc 的問題" iconFile="" showInToolBar="true" copyCaptions="true">
+	<macroInput a0="A" a1="B"/>
+	<macroOutput a0="arc_{temp}"/>
+<construction title="" author="" date="">
+<element type="point3d" label="A">
+	<show object="true" label="true" ev="20"/>
+	<objColor r="77" g="77" b="255" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="0.1" type="1" playing="false"/>
+	<auxiliary val="true"/>
+	<pointSize val="5"/>
+	<coords x="-0.7147961921704749" y="0.7284987232906972" z="0.004544421613845717" w="1"/>
+</element>
+<element type="point3d" label="B">
+	<show object="true" label="true" ev="20"/>
+	<objColor r="77" g="77" b="255" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="0.1" type="1" playing="false"/>
+	<auxiliary val="true"/>
+	<pointSize val="5"/>
+	<coords x="0.9806935994791903" y="-0.23393126245031848" z="0" w="1"/>
+</element>
+<command name="CircumcircleArc">
+	<input a0="A" a1="MidpointOnSphere[A, B]" a2="B"/>
+	<output a0="arc_{temp}"/>
+</command>
+<element type="conicpart" label="arc_{temp}">
+	<show object="true" label="false" ev="23"/>
+	<objColor r="0" g="0" b="0" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<lineStyle thickness="5" type="0" typeHidden="1"/>
+	<eqnStyle style="specific"/>
+	<outlyingIntersections val="false"/>
+	<keepTypeOnTransform val="true"/>
+	<eigenvectors x0="1" y0="0" z0="1" x1="0" y1="1" z1="1"/>
+	<matrix A0="1" A1="1" A2="2.220446049250313E-16" A3="0" A4="-0.6033054425760067" A5="-0.8154603120462732"/>
+</element>
+</construction>
+</macro>
+</geogebra>
