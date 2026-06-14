@@ -257,6 +257,63 @@ view id="4097" visible="false"
 
 When possible, also open the file in GeoGebra Classic and visually confirm that the Graphics View has usable screen area, not merely that the Window menu shows it as checked.
 
+## Dynamic Colors in Direct GeoGebra XML
+
+When directly authoring `.ggb` XML, do not create a separate `<dynamicColor .../>` child element and expect GeoGebra Classic to import it into the object's Advanced > Dynamic Colors fields. GeoGebra Classic stores dynamic color formulas as attributes on the object's `<objColor>` element.
+
+Use this pattern:
+
+```xml
+<objColor r="35" g="245" b="35" alpha="1"
+          dynamicr="H_{index}(choice(5))"
+          dynamicg="saturation(choice(5))"
+          dynamicb="value"
+          dynamica="1"
+          colorSpace="1"/>
+```
+
+Important details:
+
+- `dynamicr`, `dynamicg`, `dynamicb`, and `dynamica` are the dynamic color expressions.
+- `colorSpace="1"` uses HSV color space. In this mode the dynamic fields represent hue, saturation, value, and alpha rather than RGB channels.
+- Keep ordinary `r`, `g`, `b`, and `alpha` attributes as fallback/static preview values.
+- Validate by opening the object properties in GeoGebra Classic and checking that the Advanced > Dynamic Colors fields are populated; XML validity alone is not enough.
+
+For finite state colors, prefer a state-list plus HSV mapping instead of nested RGB `If` expressions. Example from a Fibonacci clock:
+
+```geogebra
+ChoicesH = {{0, 0, 0, 0, 0}, {1, 0, 0, 0, 0}, ...}
+ChoicesM = {{0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, ...}
+choiceH = ChoicesH(h + 1)
+choiceM = ChoicesM(m5 + 1)
+choice = Zip[bitH + (bitM * 2) + 1, bitH, choiceH, bitM, choiceM]
+H_{index} = {0.5, 0, 0.33, 0.66}
+saturation(x) = If[x ≟ 1, 0, 1]
+value = 0.95
+```
+
+Here the state code is:
+
+```text
+1 = unused / gray
+2 = hour only / red
+3 = minute only / green
+4 = both / blue
+```
+
+Then each visible polygon can use:
+
+```xml
+<objColor r="70" g="70" b="70" alpha="1"
+          dynamicr="H_{index}(choice(k))"
+          dynamicg="saturation(choice(k))"
+          dynamicb="value"
+          dynamica="1"
+          colorSpace="1"/>
+```
+
+This keeps the color logic inside GeoGebra's dependency graph, avoids JavaScript update listeners for ordinary dynamic color changes, and makes the dynamic color formulas visible in the GeoGebra UI.
+
 ## CircularArc for Great-Circle Style Routes
 
 When drawing the shortest-looking route between two 3D points around a chosen center, prefer GeoGebra's native arc command:
