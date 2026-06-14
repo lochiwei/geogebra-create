@@ -224,7 +224,7 @@ For a globe-style construction, if `O` is the globe center and `P`, `Q` are surf
 greatCirclePath = CircularArc(O, P, Q)
 ```
 
-## Longitude-Latitude Point Lists with Zip and GeoPoint
+## Longitude-Latitude Point Lists with Zip and 3D Polar Coordinates
 
 When drawing map outlines or any polyline whose source data is a sequence of longitude-latitude pairs, keep the source coordinates as a readable point list and transform them with `Zip`. Do not expand every coordinate into long repeated trigonometric formulas in the visible construction.
 
@@ -232,12 +232,20 @@ Recommended pattern:
 
 ```geogebra
 coords = {(1, 2), (3, 4), ..., (1, 2)}
-Polyline(Zip(GeoPoint(P, drawR), P, coords))
+Polyline(Zip((drawR; x(P)°; y(P)°), P, coords))
 ```
 
-Here `coords` stores `(longitude, latitude)` pairs as ordinary 2D points. `GeoPoint` should be a Custom Tool that converts one longitude-latitude point and a radius into the corresponding 3D point on the sphere. This keeps geographic data readable, makes the conversion semantic, and avoids flooding the Algebra View with repeated `cos`/`sin` coordinate formulas.
+Here `coords` stores `(longitude, latitude)` pairs as ordinary 2D points. GeoGebra's 3D polar coordinate form `(r; theta; phi)` can convert each pair directly when `theta` is longitude in the `xOy` plane and `phi` is latitude/elevation from the `xOy` plane. Do not create a `GeoPoint` Custom Tool only to expand the same conversion into `cos` and `sin` formulas.
 
 Use this pattern for continent outlines, coastlines, route datasets, spherical grids derived from coordinate lists, or any repeated longitude-latitude conversion. Close an outline by repeating the first coordinate at the end of `coords`.
+
+If the source data uses the common physics or calculus convention where the second angular coordinate is the polar angle from the positive z-axis, convert it before using GeoGebra's 3D polar coordinate form:
+
+```geogebra
+Polyline(Zip((drawR; x(P)°; 90° - y(P)°), P, coords))
+```
+
+Use a Custom Tool only when the conversion contains additional semantic work beyond GeoGebra's native 3D polar coordinates, such as applying a non-spherical projection or a documented coordinate-system correction.
 
 ## Prefer Native GeoGebra Commands Before Expanding Formulas
 
@@ -269,3 +277,108 @@ The reference file also demonstrates several compact GeoGebra command techniques
 - Use `Dilate[target, ratio, center]` for affine point movement along an edge or toward a target point.
 - Use `Zip[Polygon[L], L, nested]` to convert a list of point lists into a list of polygons.
 - Hide intermediate lists such as `nested` when only the final generated geometry should remain visible.
+
+## Custom Tools with Function Inputs
+
+Custom Tools can accept function objects as input parameters. Use this when a reusable geometric object should be driven by a function, such as a sampled curve, envelope, locus-like construction, or family of transformed points.
+
+Practical pattern:
+
+```geogebra
+f(x) = sin(x)
+CurvePoint(f, t)
+```
+
+Create the dependent output from the function and the needed numeric or point parameters, then build the Custom Tool with the function included as one of the inputs. This keeps reusable curve tools semantic and avoids copying a function formula into every generated object.
+
+## Transparent Polygon for Closed Outline Lists
+
+Inside iterative Custom Tool workflows, prefer polygons from point lists over a closed `Polyline` made with `Append` when the goal is a stable closed outline or filled stage.
+
+Reliable pattern:
+
+```geogebra
+nested = IterationList[NextGen[L, t], L, {v0}, m]
+stages = Zip[Polygon[L], L, nested]
+```
+
+This is often more robust than:
+
+```geogebra
+Zip[Polyline[Append[L, L(1)]], L, nested]
+```
+
+Set the polygon fill opacity to transparent or near-transparent when only the outline should be visually emphasized. Use this for nested spirals and iterative polygon stages where list handling inside a Custom Tool needs to remain simple and predictable.
+
+## Prefer Point Lists and Polyline over Batch Curve Objects in 3D
+
+For 3D globe outlines, sampled routes, grids, and dense decorative paths, sampled point lists rendered with `Polyline` are often more reliable than generating many separate `Curve(...)` objects.
+
+Recommended pattern:
+
+```geogebra
+routePoints = Zip((drawR; x(P)°; y(P)°), P, coords)
+route = Polyline(routePoints)
+```
+
+Use this when the source geometry is already discrete data or can be sampled cleanly. It keeps the Algebra View shorter, reduces rendering overhead, and avoids fragile batches of generated curve objects.
+
+Use native curve or arc commands when the object is genuinely continuous and GeoGebra has a direct command for it, such as `CircularArc(O, P, Q)`.
+
+## Direct XML Angle Sliders Use Radian Values
+
+When authoring `.ggb` XML directly, angle expressions can remain readable in degrees, but slider numeric values should be written in radians.
+
+Readable command expression:
+
+```xml
+<expression label="theta" exp="36°"/>
+```
+
+Slider values should use radians:
+
+```xml
+<value val="0.6283185307179586"/>
+<slider min="0" max="6.283185307179586" step="0.017453292519943295"/>
+```
+
+Use this for angle sliders created by direct XML generation. Mismatching degree expressions with degree-valued slider internals can make the opened file behave differently from the intended construction.
+
+## Guard SLERP and Angle-Weighted Formulas Near Zero Angle
+
+Spherical interpolation and angle-weighted formulas often divide by `sin(Omega)`. Guard these formulas in GeoGebra before division so coincident or nearly coincident endpoints do not create undefined objects.
+
+Recommended pattern:
+
+```geogebra
+Omega = Angle(P, O, Q)
+slerpPoint = If(abs(sin(Omega)) < 10^(-8), P, (sin((1 - t) Omega) P + sin(t Omega) Q) / sin(Omega))
+```
+
+Keep the guard inside GeoGebra using `If`, `abs`, and exact construction values. Do not precompute fallback coordinates externally.
+
+## Custom Projection Tools Inside Zip
+
+When several related 3D points need the same projection or coordinate transform, define that transform once as a Custom Tool and call it from `Zip` instead of creating every projected point one by one.
+
+A reusable xy-plane projection tool can have this structure:
+
+```geogebra
+Proj(<Point>)
+```
+
+with the output point defined by:
+
+```geogebra
+(x(P), y(P), 0)
+```
+
+Then projected face lists can be generated from vertex-index lists:
+
+```geogebra
+V = {A, B, C, D, E, F, G, H}
+F_{ID} = {{1, 2, 3, 4}, {1, 2, 6, 5}, {2, 3, 7, 6}}
+projFaces = Zip(Polygon(Zip(Proj(V(i)), i, face)), face, F_{ID})
+```
+
+Use this when projecting a polyhedron, shadow, footprint, or any repeated coordinate transform from many vertices into a plane. It keeps the transform semantic, reduces duplicated projection formulas, and lets the face and edge structure remain readable as lists of indices.
