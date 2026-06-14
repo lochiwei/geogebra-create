@@ -208,6 +208,55 @@ For Custom Tools intended for 3D output, set the macro `viewId` to `512`, not `4
 
 After packaging, validation should include opening the file in GeoGebra when possible and checking that the Algebra View and 3D Graphics View appear immediately, without the user having to open panes manually. Static XML validation alone is not enough to catch wrong view ids.
 
+## Opening 2D Files with Algebra and Graphics Views in GeoGebra Classic 5
+
+When directly authoring a 2D `.ggb` file for GeoGebra Classic 5, do not assume that a simplified perspective with only one pane and view locations like `location="3"` for Algebra and `location="1,3"` for Graphics will open correctly. In Classic 5, that can leave the Graphics View checked in the Window menu but visually hidden or overlapped by the Algebra View.
+
+Use the multi-pane location pattern that GeoGebra Classic itself writes. For a standard 2D file that should open with Algebra View on the left and Graphics View visible on the right, use:
+
+```xml
+<perspective id="tmp">
+  <panes>
+    <pane location="" divider="0.5953408110440035" orientation="1"/>
+    <pane location="1" divider="0.29987608426270135" orientation="0"/>
+    <pane location="1,0" divider="0.3345724907063197" orientation="0"/>
+  </panes>
+  <views>
+    <view id="2" visible="true" inframe="false" stylebar="true"
+          location="1,0,0" size="270" tab="ALGEBRA"
+          window="100,100,600,400"/>
+    <view id="1" visible="true" inframe="false" stylebar="true"
+          location="3" size="930" window="100,100,600,400"/>
+    <view id="4097" visible="false" inframe="false" stylebar="false"
+          location="1,0,2" size="300" window="100,100,700,550"/>
+    <view id="512" visible="false" inframe="false" stylebar="false"
+          location="3,1,0" size="300" window="100,100,600,400"/>
+  </views>
+  <toolbar show="true" position="1" help="true"/>
+  <input show="true" cmd="true" top="algebra"/>
+  <dockBar show="false" east="false"/>
+</perspective>
+```
+
+Important details:
+
+- `view id="2"` is the Algebra View. For this 2D layout, place it at `location="1,0,0"`.
+- `view id="1"` is the 2D Graphics View. For this layout, place it at `location="3"`.
+- Keep `view id="4097"` invisible. In Classic 5 it can open a settings/properties-style view; making it visible can hide the intended drawing area.
+- Keep `view id="512"` invisible for ordinary 2D files unless the construction is intentionally 3D.
+- Include `<algebraView><mode val="3"/></algebraView>` when the file should satisfy the project rule that Algebra View opens sorted by object category.
+
+After packaging, validation must check the actual perspective XML, not only ZIP validity:
+
+```text
+view id="2" visible="true" location="1,0,0"
+view id="1" visible="true" location="3"
+view id="4097" visible="false"
+<algebraView><mode val="3"/></algebraView>
+```
+
+When possible, also open the file in GeoGebra Classic and visually confirm that the Graphics View has usable screen area, not merely that the Window menu shows it as checked.
+
 ## CircularArc for Great-Circle Style Routes
 
 When drawing the shortest-looking route between two 3D points around a chosen center, prefer GeoGebra's native arc command:
