@@ -108,5 +108,7 @@ description: Use when the user invokes /geogebra-create or asks to create GeoGeb
 
 ## 交付成果
 
-- 製作成功後，必須交付 `.ggb` 檔，並報告製圖方法的主要邏輯。
+- 製作成功後，必須交付 `.ggb` 檔。
+- 檔案開啟時，至少要顯示「代數區、繪圖區」兩個窗格，且「代數區」必須以「物件類別」排序，如果是 3D 圖檔，則必須另外顯示「3D 繪圖區」窗格。
+- 報告製圖方法的主要邏輯。
 - 其他相關的 `.png`, `.xml` 檔也可提供給使用者參考。(optional)
