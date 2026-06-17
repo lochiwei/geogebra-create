@@ -1,10 +1,14 @@
-# GeoGebra Custom Tools 登錄
+# GeoGebra Custom Tools Manual
 
-本目錄保存 `geogebra-create` skill 可重用的 GeoGebra 自製工具。建立物件時，如果沒有已知 GeoGebra 內建指令可以直接套用，必須先搜尋本目錄與本文件，確認是否已有適用工具。
+本文件保存 `geogebra-create` skill 可重用的 GeoGebra 自製工具完整說明。快速查找工具時先看 `custom/index.md`；需要使用範例、限制與內部邏輯時再看本文件。
 
-## `source/slerp.ggb`
+## `tools/Slerp/Slerp.ggb`
 
-來源：`custom_tools/source/slerp.ggb`
+來源：`custom/tools/Slerp/Slerp.ggb`
+
+可載入工具檔：`custom/tools/Slerp/Slerp.ggt`
+
+XML 展開定義：`custom/tools/Slerp/Slerp.xml`
 
 用途：提供以原點 `(0, 0, 0)` 為球心的球面插值／大圓弧相關工具。這組工具適合建立單位球或同心球上的球面中點與大圓弧，特別是 GeoGebra 內建 `CircumcircleArc` / `CircularArc` 在 3D 球面情境不易直接得到預期結果時。
 
@@ -80,9 +84,13 @@ arcAB = ArcOnSphere[A, B]
 arc = CircumcircleArc[A, MidpointOnSphere[A, B], B]
 ```
 
-## `source/polyline_closed.ggb`
+## `tools/PolylineClosed/PolylineClosed.ggb`
 
-來源：`custom_tools/source/polyline_closed.ggb`
+來源：`custom/tools/PolylineClosed/PolylineClosed.ggb`
+
+可載入工具檔：`custom/tools/PolylineClosed/PolylineClosed.ggt`
+
+XML 展開定義：`custom/tools/PolylineClosed/PolylineClosed.xml`
 
 SHA-256：`16b9d987fc2e3369034eaac58c668d8a44012794e3bb6f0010fbb3295e34b134`
 
