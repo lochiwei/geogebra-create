@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<geogebra format="5.0" version="5.4.925.3" app="classic" platform="d" xsi:noNamespaceSchemaLocation="https://www.geogebra.org/apps/xsd/ggt.xsd" xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<macro cmdName="PolylineClosed" toolName="PolylineClosed" toolHelp="PolylineClosed(&lt;point list&gt;)" iconFile="" showInToolBar="true" copyCaptions="true">
+	<macroInput a0="pts"/>
+	<macroOutput a0="closed"/>
+<construction title="" author="" date="">
+<expression label="pts" exp="{(1, 1), (2, 2), (2, 3), (1, 3), (0, 2), (-1, 2)}"/>
+<element type="list" label="pts">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="100" b="0" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="0.1" type="0" playing="false"/>
+	<lineStyle thickness="5" type="0" typeHidden="1"/>
+	<pointSize val="5"/>
+	<pointStyle val="0"/>
+	<angleStyle val="0"/>
+</element>
+<command name="PolyLine">
+	<input a0="Join[{pts, {pts(1)}}]"/>
+	<output a0="closed"/>
+</command>
+<element type="polyline" label="closed">
+	<lineStyle thickness="5" type="0" typeHidden="1" opacity="178"/>
+	<show object="true" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<startStyle val="default"/>
+	<endStyle val="default"/>
+</element>
+</construction>
+</macro>
+</geogebra>
