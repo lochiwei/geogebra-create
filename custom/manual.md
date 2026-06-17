@@ -10,78 +10,123 @@
 
 XML 展開定義：`custom/tools/Slerp/Slerp.xml`
 
-用途：提供以原點 `(0, 0, 0)` 為球心的球面插值／大圓弧相關工具。這組工具適合建立單位球或同心球上的球面中點與大圓弧，特別是 GeoGebra 內建 `CircumcircleArc` / `CircularArc` 在 3D 球面情境不易直接得到預期結果時。
+SHA-256：
 
-### `MidpointOnSphere[<Point>, <Point>]`
+- `Slerp.ggb`：`42197af9b3d3c3e16a3c025b6e86174160a66d6015b450e9aa233e42e2ab558d`
+- `Slerp.ggt`：`8cadaa1c3049b172aa32e6ca18235529225b0451b7f2a5024566c59a30936b48`
+
+用途：提供以原點 `(0, 0, 0)` 為球心的球面線性插值、球面中點與測地線弧工具。這組工具適合建立同心球上的插值點、大圓弧中點與兩點間的大圓弧，特別是需要以參數 `t` 控制球面路徑上的動點時。
+
+### `Slerp[<start point>, <end point>, <parameter>]`
 
 指令格式：
 
 ```geogebra
-MidpointOnSphere[A, B]
+Slerp[P, Q, t]
 ```
 
 輸入：
 
-- `A`：球面上的 3D 點。
-- `B`：球面上的 3D 點。
+- `P`：球面插值的起點。
+- `Q`：球面插值的終點。
+- `t`：插值參數；通常使用 `0 <= t <= 1`，其中 `0` 回到 `P`，`1` 回到 `Q`，`0.5` 回到球面中點。
 
 輸出：
 
-- 回傳 `A` 與 `B` 之間大圓弧的球面中點。
+- 回傳從 `P` 到 `Q` 的大圓弧上，比例為 `t` 的 3D 點。
 
 使用方式：
 
 ```geogebra
-M = MidpointOnSphere[P, Q]
+t = Slider[0, 1, 0.01]
+R = Slerp[A, B, t]
 ```
 
 前提與限制：
 
 - 球心固定為原點 `(0, 0, 0)`。
 - 輸入點應位於同一個以原點為球心的球面上。
-- 兩點不應互為對跖點；若夾角為 180 度，球面中點不唯一，公式中的 `cos(theta / 2)` 會退化。
+- `P` 與 `Q` 不應重合或互為對跖點；若夾角為 `0` 或 `180` 度，公式中的 `sin(theta)` 會退化或測地線不唯一。
+- `t` 可超出 `[0, 1]` 做延伸插值，但一般測地線段用途建議限制在 `[0, 1]`。
 
 內部邏輯：
 
 ```geogebra
-theta = Angle[A, (0, 0, 0), B]
-M = (A + B) / (2 * cos(theta / 2))
+theta = Angle[P, (0, 0, 0), Q]
+R = (sin((1 - t) theta) P + sin(t theta) Q) / sin(theta)
 ```
 
-### `ArcOnSphere[<Point>, <Point>]`
+### `GeoMidpoint[<Point>, <Point>]`
 
 指令格式：
 
 ```geogebra
-ArcOnSphere[A, B]
+GeoMidpoint[A, B]
 ```
 
 輸入：
 
-- `A`：球面上的 3D 點。
-- `B`：球面上的 3D 點。
+- `A`：球面上的起點。
+- `B`：球面上的終點。
 
 輸出：
 
-- 回傳通過 `A`、球面中點與 `B` 的大圓弧物件。
+- 回傳 `A` 與 `B` 之間大圓弧上的球面中點。
 
 使用方式：
 
 ```geogebra
-arcAB = ArcOnSphere[A, B]
+M = GeoMidpoint[A, B]
 ```
 
 前提與限制：
 
 - 球心固定為原點 `(0, 0, 0)`。
 - 輸入點應位於同一個以原點為球心的球面上。
-- 此工具內部呼叫 `MidpointOnSphere[A, B]`，因此 `ArcOnSphere` 與 `MidpointOnSphere` 必須一起載入。
-- 兩點不應互為對跖點，原因同 `MidpointOnSphere`。
+- 此工具內部呼叫 `Slerp[A, B, 0.5]`，因此 `GeoMidpoint` 與 `Slerp` 必須一起載入。
+- 兩點不應重合或互為對跖點，原因同 `Slerp`。
 
 內部邏輯：
 
 ```geogebra
-arc = CircumcircleArc[A, MidpointOnSphere[A, B], B]
+M = Slerp[A, B, 0.5]
+```
+
+### `Geodesic[<Point>, <Point>]`
+
+指令格式：
+
+```geogebra
+Geodesic[A, B]
+```
+
+輸入：
+
+- `A`：球面上的起點。
+- `B`：球面上的終點。
+
+輸出：
+
+- 回傳通過 `A`、`GeoMidpoint[A, B]` 與 `B` 的大圓弧物件，代表兩點之間的測地線弧。
+
+使用方式：
+
+```geogebra
+arcAB = Geodesic[A, B]
+```
+
+前提與限制：
+
+- 球心固定為原點 `(0, 0, 0)`。
+- 輸入點應位於同一個以原點為球心的球面上。
+- 此工具內部呼叫 `GeoMidpoint[A, B]`，因此 `Geodesic`、`GeoMidpoint` 與 `Slerp` 必須一起載入。
+- 兩點不應重合或互為對跖點，原因同 `Slerp`。
+
+內部邏輯：
+
+```geogebra
+M = GeoMidpoint[A, B]
+c = CircumcircleArc[A, M, B]
 ```
 
 ## `tools/PolylineClosed/PolylineClosed.ggb`

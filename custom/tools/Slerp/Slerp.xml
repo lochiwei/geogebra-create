@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <geogebra format="5.0" version="5.4.925.3" app="classic" platform="d" xsi:noNamespaceSchemaLocation="https://www.geogebra.org/apps/xsd/ggt.xsd" xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<macro cmdName="MidpointOnSphere" toolName="MidpointOnSphere" toolHelp="MidpointOnSphere(&lt;point&gt;, &lt;point&gt;)：前提是球心為 (0,0,0)" iconFile="" showInToolBar="true" copyCaptions="true">
-	<macroInput a0="A" a1="B"/>
-	<macroOutput a0="M"/>
+<macro cmdName="Slerp" toolName="Slerp" toolHelp="Slerp(&lt;start point&gt;, &lt;end point&gt;, &lt;parameter&gt;)：前提是球心為 (0,0,0)" iconFile="" showInToolBar="true" copyCaptions="true">
+	<macroInput a0="P" a1="Q" a2="t"/>
+	<macroOutput a0="R"/>
 <construction title="" author="" date="">
-<element type="point3d" label="A">
+<element type="point3d" label="P">
 	<show object="true" label="true" ev="4"/>
-	<objColor r="77" g="77" b="255" alpha="0"/>
+	<objColor r="255" g="51" b="102" alpha="0"/>
 	<layer val="0"/>
 	<labelMode val="0"/>
 	<animation step="0.1" type="1" playing="false"/>
-	<pointSize val="5"/>
+	<pointSize val="9"/>
 	<coords x="-0.7147961921704749" y="0.7284987232906972" z="0.004544421613845717" w="1"/>
 </element>
-<element type="point3d" label="B">
+<element type="point3d" label="Q">
 	<show object="true" label="true" ev="4"/>
 	<objColor r="77" g="77" b="255" alpha="0"/>
 	<layer val="0"/>
 	<labelMode val="0"/>
 	<animation step="0.1" type="1" playing="false"/>
-	<pointSize val="5"/>
+	<pointSize val="9"/>
 	<coords x="0.9806935994791903" y="-0.23393126245031848" z="0" w="1"/>
 </element>
 <command name="Angle">
-	<input a0="A" a1="(0, 0, 0)" a2="B"/>
+	<input a0="P" a1="(0, 0, 0)" a2="Q"/>
 	<output a0="θ"/>
 </command>
 <element type="angle3d" label="θ">
@@ -36,56 +36,114 @@
 	<layer val="0"/>
 	<labelMode val="1"/>
 </element>
-<expression label="M" exp="(A + B) / ((2 * cos(θ / 2)))" type="point"/>
-<element type="point3d" label="M">
+<element type="numeric" label="t">
+	<value val="0.74"/>
+	<symbolic val="true"/>
+	<show object="true" label="true" ev="3"/>
+	<objColor r="102" g="153" b="0" alpha="0.10000000149011612"/>
+	<bgColor r="192" g="192" b="192" alpha="255"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="0.01" type="0" playing="false"/>
+</element>
+<expression label="R" exp="((sin(((1 - t) * θ)) * P) + (sin((t * θ)) * Q)) / sin(θ)" type="point"/>
+<element type="point3d" label="R">
 	<show object="true" label="true" ev="4"/>
-	<objColor r="110" g="109" b="115" alpha="0"/>
+	<objColor r="102" g="153" b="0" alpha="0"/>
 	<layer val="0"/>
 	<labelMode val="0"/>
-	<pointSize val="4"/>
-	<coords x="0.4804544247954693" y="0.8936421280886684" z="0.008211390605901467" w="1"/>
+	<pointSize val="9"/>
+	<coords x="0.9033542759631245" y="0.43690494345758873" z="0.00531318875804348" w="1"/>
 </element>
 </construction>
 </macro>
-<macro cmdName="ArcOnSphere" toolName="ArcOnSphere" toolHelp="ArcOnSphere(&lt;point&gt;, &lt;point&gt;)：修正 CircumcircularArc/CircularArc 的問題" iconFile="" showInToolBar="true" copyCaptions="true">
+<macro cmdName="GeoMidpoint" toolName="GeoMidpoint" toolHelp="GeoMidpoint(&lt;point&gt;, &lt;point&gt;)" iconFile="" showInToolBar="true" copyCaptions="true">
 	<macroInput a0="A" a1="B"/>
-	<macroOutput a0="arc_{temp}"/>
+	<macroOutput a0="M"/>
 <construction title="" author="" date="">
+<expression label="A" exp="(1, 0, 0)" type="point"/>
 <element type="point3d" label="A">
-	<show object="true" label="true" ev="20"/>
-	<objColor r="77" g="77" b="255" alpha="0"/>
+	<show object="true" label="true" ev="4"/>
+	<objColor r="255" g="153" b="51" alpha="0"/>
 	<layer val="0"/>
 	<labelMode val="0"/>
 	<animation step="0.1" type="1" playing="false"/>
-	<auxiliary val="true"/>
-	<pointSize val="5"/>
-	<coords x="-0.7147961921704749" y="0.7284987232906972" z="0.004544421613845717" w="1"/>
+	<pointSize val="7"/>
+	<coords x="1" y="0" z="0" w="1"/>
 </element>
 <element type="point3d" label="B">
-	<show object="true" label="true" ev="20"/>
+	<show object="true" label="true" ev="4"/>
 	<objColor r="77" g="77" b="255" alpha="0"/>
 	<layer val="0"/>
 	<labelMode val="0"/>
 	<animation step="0.1" type="1" playing="false"/>
-	<auxiliary val="true"/>
-	<pointSize val="5"/>
-	<coords x="0.9806935994791903" y="-0.23393126245031848" z="0" w="1"/>
+	<pointSize val="7"/>
+	<coords x="-0.37083667475535" y="1.004221357062356" z="3" w="1"/>
 </element>
-<command name="CircumcircleArc">
-	<input a0="A" a1="MidpointOnSphere[A, B]" a2="B"/>
-	<output a0="arc_{temp}"/>
+<command name="Slerp">
+	<input a0="A" a1="B" a2="0.5"/>
+	<output a0="M"/>
 </command>
-<element type="conicpart" label="arc_{temp}">
-	<show object="true" label="false" ev="23"/>
-	<objColor r="0" g="0" b="0" alpha="0"/>
+<element type="point3d" label="M">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="255" g="153" b="51" alpha="0"/>
 	<layer val="0"/>
 	<labelMode val="0"/>
-	<lineStyle thickness="5" type="0" typeHidden="1"/>
+	<pointSize val="9"/>
+	<coords x="0.47328854646453267" y="0.7554262102417808" z="2.2567520744180114" w="1"/>
+</element>
+</construction>
+</macro>
+<macro cmdName="Geodesic" toolName="Geodesic" toolHelp="Geodesic(&lt;point&gt;, &lt;point&gt;)" iconFile="" showInToolBar="true" copyCaptions="true">
+	<macroInput a0="A" a1="B"/>
+	<macroOutput a0="c"/>
+<construction title="" author="" date="">
+<expression label="A" exp="(1, 0, 0)" type="point"/>
+<element type="point3d" label="A">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="255" g="153" b="51" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="0.1" type="1" playing="false"/>
+	<pointSize val="7"/>
+	<coords x="1" y="0" z="0" w="1"/>
+</element>
+<element type="point3d" label="B">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="77" g="77" b="255" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="0.1" type="1" playing="false"/>
+	<pointSize val="7"/>
+	<coords x="-0.37083667475535" y="1.004221357062356" z="3" w="1"/>
+</element>
+<command name="GeoMidpoint">
+	<input a0="A" a1="B"/>
+	<output a0="M"/>
+</command>
+<element type="point3d" label="M">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="255" g="153" b="51" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<pointSize val="9"/>
+	<coords x="0.47328854646453267" y="0.7554262102417808" z="2.2567520744180114" w="1"/>
+</element>
+<command name="CircumcircleArc">
+	<input a0="A" a1="M" a2="B"/>
+	<output a0="c"/>
+</command>
+<element type="conicpart" label="c">
+	<show object="true" label="false" ev="7"/>
+	<objColor r="255" g="153" b="51" alpha="0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<lineStyle thickness="3" type="0" typeHidden="1"/>
 	<eqnStyle style="specific"/>
 	<outlyingIntersections val="false"/>
 	<keepTypeOnTransform val="true"/>
 	<eigenvectors x0="1" y0="0" z0="1" x1="0" y1="1" z1="1"/>
-	<matrix A0="1" A1="1" A2="2.220446049250313E-16" A3="0" A4="-0.6033054425760067" A5="-0.8154603120462732"/>
+	<matrix A0="1" A1="1" A2="3.552713678800501E-15" A3="0" A4="-1.2187107572959734" A5="-2.7769478940976384"/>
 </element>
 </construction>
 </macro>
