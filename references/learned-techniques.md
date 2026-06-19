@@ -488,3 +488,38 @@ projFaces = Zip(Polygon(Zip(Proj(V(i)), i, face)), face, F_{ID})
 ```
 
 Use this when projecting a polyhedron, shadow, footprint, or any repeated coordinate transform from many vertices into a plane. It keeps the transform semantic, reduces duplicated projection formulas, and lets the face and edge structure remain readable as lists of indices.
+
+## Use Spreadsheet Fill When Repeated Objects Need Independent Styling
+
+Do not choose `Sequence` only because the objects follow a clear geometric or recursive pattern. First determine whether every generated item needs to retain its own independent object identity.
+
+Objects generated inside one `Sequence` belong to a single list object. The list elements normally share the list's style and settings, so they cannot be freely customized one by one with independent:
+
+- colors or dynamic colors,
+- fill opacity,
+- line thickness or line style,
+- layers,
+- captions or labels,
+- conditions for showing objects,
+- selection and interaction settings.
+
+When regularly generated objects require per-item customization, use spreadsheet fill-down formulas. Each spreadsheet cell then creates a separately named GeoGebra object, such as `I3`, `I4`, `I5`, and every object can have its own style, dynamic color formula, visibility condition, and other settings.
+
+This is especially useful when each row represents one generation or construction stage and each column represents a semantic role, for example:
+
+```text
+index | sequence value | direction | displacement | center | vertices | sector | square | arc
+```
+
+A Fibonacci-square construction can therefore assign each sector an independent dynamic hue and visibility condition:
+
+```text
+dynamic hue of I3 = (A3 - 1) / n
+show I3 when A3 <= index and showSectors
+```
+
+and use the corresponding row formulas for `I4`, `I5`, and later stages.
+
+Use `Sequence`, `Zip`, or `IterationList` when homogeneous generated items can share one style and one set of object settings. Use spreadsheet fill when the pattern is regular but the resulting objects need arbitrary per-item customization.
+
+In GeoGebra's ordinary no-script interface, spreadsheet fill is the most natural and practical batch-construction method for this requirement. Scripts, direct XML authoring, repeated Custom Tool calls, or splitting objects into several lists can sometimes imitate parts of the behavior, but they do not replace the spreadsheet's combination of visible recurrence, easy fill-down, stable individual names, and independent object settings.
